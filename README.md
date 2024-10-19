@@ -10,8 +10,10 @@ template <>
 struct quick_status_code_from_enum<XErrc>
     : quick_status_code_from_enum_defaults<XErrc> {
   static constexpr auto domain_name = "XErrc";
-  static constexpr auto domain_uuid = "{6009c534-9d4c-4037-8719-ce562551cb02}";
-  static constexpr auto payload_domain_uuid = "{055ec200-1386-441d-a4b2-60e1f71c1d53}";
+  // 0x807d0522e7b4e8eb
+  static constexpr auto domain_uuid = "35f55a10-24ca-4c8c-8b7b-116e069a9b84";
+  // 0x5b88ce2002a67819
+  static constexpr auto payload_uuid = "3a62e7c9-7cef-4928-abe5-8de97e03c19d";
   static const std::initializer_list<mapping>& value_mappings() {
     static const std::initializer_list<mapping> v = {
       {XErrc::out_of_range, "out_of_range", {}}, // NOLINT

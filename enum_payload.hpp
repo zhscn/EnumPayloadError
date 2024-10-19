@@ -32,7 +32,7 @@ struct HasQuickFromEnum<Enum, std::void_t<quick_status_code_from_enum<Enum>>>
 template <typename Enum, typename Payload>
 concept EnumPayload = HasQuickFromEnum<Enum>::value &&
                       requires {
-                        { quick_status_code_from_enum<Enum>::payload_domain_uuid };
+                        { quick_status_code_from_enum<Enum>::payload_uuid };
                       } && fmt::is_formattable<Payload>::value &&
                       // TODO: trivially relocatable
                       std::is_nothrow_move_constructible_v<Payload>;
@@ -51,8 +51,8 @@ struct EnumPayloadDomainImpl<Enum, Payload> final : public status_code_domain {
   using EnumPayloadErrorSelf = EnumPayloadError<Enum, Payload>;
 
   constexpr EnumPayloadDomainImpl()
-      : Base(Src::payload_domain_uuid,
-             _uuid_size<detail::cstrlen(Src::payload_domain_uuid)>()) {}
+      : Base(Src::payload_uuid,
+             _uuid_size<detail::cstrlen(Src::payload_uuid)>()) {}
   EnumPayloadDomainImpl(const EnumPayloadDomainImpl &) = default;
   EnumPayloadDomainImpl(EnumPayloadDomainImpl &&) = default;
   EnumPayloadDomainImpl &operator=(const EnumPayloadDomainImpl &) = default;

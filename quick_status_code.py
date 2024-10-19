@@ -42,9 +42,9 @@ struct quick_status_code_from_enum<{enum_name}>
     : quick_status_code_from_enum_defaults<{enum_name}> {{
   static constexpr auto domain_name = "{enum_name}";
   // {hex(calc_domain_id(str(uuid1)))}
-  static constexpr auto domain_uuid = "{{{uuid1}}}";
+  static constexpr auto domain_uuid = "{uuid1}";
   // {hex(calc_domain_id(str(uuid2)))}
-  static constexpr auto payload_domain_uuid = "{{{uuid2}}}";
+  static constexpr auto payload_uuid = "{uuid2}";
   static const std::initializer_list<mapping>& value_mappings() {{
     static const std::initializer_list<mapping> v = {{
 """
