@@ -1,3 +1,5 @@
+The `EnumPayloadError` works on top of the awesome https://github.com/ned14/outcome library.
+
 ```cpp
 enum class XErrc : std::uint8_t {
   out_of_range,
