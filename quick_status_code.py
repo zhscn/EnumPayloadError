@@ -2,6 +2,22 @@ import re
 import uuid
 import sys
 
+def hex_byte(c):
+    return int(c, 16)
+
+def calc_domain_id(s):
+    x = ((hex_byte(s[0]) << 0) | (hex_byte(s[1]) << 4) | (hex_byte(s[2]) << 8) | (hex_byte(s[3]) << 12) |
+         (hex_byte(s[4]) << 16) | (hex_byte(s[5]) << 20) | (hex_byte(s[6]) << 24) | (hex_byte(s[7]) << 28) |
+         (hex_byte(s[9]) << 32) | (hex_byte(s[10]) << 36) | (hex_byte(s[11]) << 40) | (hex_byte(s[12]) << 44) |
+         (hex_byte(s[14]) << 48) | (hex_byte(s[15]) << 52) | (hex_byte(s[16]) << 56) | (hex_byte(s[17]) << 60))
+
+    y = ((hex_byte(s[19]) << 0) | (hex_byte(s[20]) << 4) | (hex_byte(s[21]) << 8) | (hex_byte(s[22]) << 12) |
+         (hex_byte(s[24]) << 16) | (hex_byte(s[25]) << 20) | (hex_byte(s[26]) << 24) | (hex_byte(s[27]) << 28) |
+         (hex_byte(s[28]) << 32) | (hex_byte(s[29]) << 36) | (hex_byte(s[30]) << 40) | (hex_byte(s[31]) << 44) |
+         (hex_byte(s[32]) << 48) | (hex_byte(s[33]) << 52) | (hex_byte(s[34]) << 56) | (hex_byte(s[35]) << 60))
+
+    return x ^ y
+
 def generate_spec(path):
     with open(path, 'r') as file:
         cpp_code = file.read()
@@ -25,7 +41,9 @@ template <>
 struct quick_status_code_from_enum<{enum_name}>
     : quick_status_code_from_enum_defaults<{enum_name}> {{
   static constexpr auto domain_name = "{enum_name}";
+  // {hex(calc_domain_id(str(uuid1)))}
   static constexpr auto domain_uuid = "{{{uuid1}}}";
+  // {hex(calc_domain_id(str(uuid2)))}
   static constexpr auto payload_domain_uuid = "{{{uuid2}}}";
   static const std::initializer_list<mapping>& value_mappings() {{
     static const std::initializer_list<mapping> v = {{
