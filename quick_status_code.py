@@ -55,10 +55,9 @@ struct quick_status_code_from_enum<{enum_name}>
         spec += """    };
     return v;
   }
-};
-"""
+};"""
         output += spec
-    output += 'SYSTEM_ERROR2_NAMESPACE_END'
+    output += '\nSYSTEM_ERROR2_NAMESPACE_END'
     print(output)
 
 if __name__ == "__main__":
