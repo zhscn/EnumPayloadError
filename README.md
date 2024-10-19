@@ -28,8 +28,8 @@ SYSTEM_ERROR2_NAMESPACE_END
 
 namespace oc = OUTCOME_V2_NAMESPACE::experimental;
 
-// default payload type is std::string
-using XError = oc::EnumPayloadError<XErrc>;
+// use std::string as payload type
+using XError = oc::EnumPayloadError<XErrc, std::string>;
 
 template<typename T>
 using Result = oc::status_result<T>;

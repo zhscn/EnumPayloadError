@@ -3,20 +3,17 @@
 #include <fmt/format.h>
 #include <outcome-experimental.hpp>
 
-#include <string>
-#include <string_view>
-
 template <>
 struct fmt::formatter<
     OUTCOME_V2_NAMESPACE::experimental::status_code_domain::string_ref>
-    : fmt::formatter<std::string_view> {
+    : fmt::formatter<fmt::string_view> {
   using Self =
       OUTCOME_V2_NAMESPACE::experimental::status_code_domain::string_ref;
 
   template <typename FormatContext>
   auto format(const Self &ref, FormatContext &ctx) const {
-    auto s = std::string_view{ref.data(), ref.size()};
-    return fmt::formatter<std::string_view>::format(s, ctx);
+    auto s = fmt::string_view{ref.data(), ref.size()};
+    return fmt::formatter<fmt::string_view>::format(s, ctx);
   }
 };
 
@@ -30,7 +27,7 @@ struct HasQuickFromEnum<Enum, std::void_t<quick_status_code_from_enum<Enum>>>
     : std::true_type {};
 
 template <typename Enum, typename Payload>
-concept EnumPayload = HasQuickFromEnum<Enum>::value &&
+concept EnumPayload = std::is_enum_v<Enum> && HasQuickFromEnum<Enum>::value &&
                       requires {
                         { quick_status_code_from_enum<Enum>::payload_uuid };
                       } && fmt::is_formattable<Payload>::value &&
@@ -39,7 +36,7 @@ concept EnumPayload = HasQuickFromEnum<Enum>::value &&
 
 template <typename Enum, typename Payload> struct EnumPayloadDomainImpl;
 
-template <typename Enum, typename Payload = std::string>
+template <typename Enum, typename Payload>
   requires EnumPayload<Enum, Payload>
 using EnumPayloadError = status_code<EnumPayloadDomainImpl<Enum, Payload>>;
 
