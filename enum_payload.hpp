@@ -1,6 +1,6 @@
 #pragma once
 
-#include <fmt/format.h>
+#include <fmt/base.h>
 #include <outcome-experimental.hpp>
 
 template <>
@@ -149,10 +149,14 @@ struct EnumPayloadDomainImpl<Enum, Payload> final : public status_code_domain {
     const value_type &c =
         static_cast<const EnumPayloadErrorSelf &>(code).value();
     const auto mapping = _find_mapping(c.value);
-    auto s = fmt::format("{}.{}: {}", name(), mapping->message, c.payload);
-    auto p = (char *)malloc(s.size()); // NOLINT
-    memcpy(p, s.data(), s.size());     // NOLINT
-    return atomic_refcounted_string_ref(p, s.size());
+    constexpr int CAPACITY = 256;
+    char buf[CAPACITY]; // NOLINT
+    auto fmt_ret = fmt::format_to_n(std::begin(buf), CAPACITY, "{}.{}: {}",
+                                    name(), mapping->message, c.payload);
+    auto n = fmt_ret.out - std::begin(buf);
+    auto p = (char *)malloc(n); // NOLINT
+    memcpy(p, buf, n);          // NOLINT
+    return atomic_refcounted_string_ref(p, n);
   }
 
   void _do_throw_exception(const status_code<void> &code) const final;
